@@ -1,0 +1,26 @@
+{
+  "name": "json-toon-converter",
+  "version": "1.0.0",
+  "description": "Free online JSON to TOON converter - Convert between JSON and TOON (Token Oriented Object Notation) formats instantly. Optimize data for LLMs with token-efficient format.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server ."
+  },
+  "keywords": [
+    "json",
+    "toon",
+    "converter",
+    "json to toon",
+    "toon to json",
+    "token oriented object notation",
+    "online converter",
+    "format converter",
+    "llm",
+    "ai data format",
+    "token optimization"
+  ],
+  "author": "",
+  "dependencies": {},
+  "devDependencies": {}
+}
