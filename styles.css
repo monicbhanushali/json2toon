@@ -8,7 +8,7 @@
 }
 
 :root {
-    /* Color Palette */
+    /* Color Palette - Light Mode */
     --primary-color: #2563eb;
     --primary-hover: #1d4ed8;
     --secondary-color: #64748b;
@@ -36,6 +36,28 @@
     --radius-lg: 0.75rem;
 }
 
+/* Dark Mode */
+[data-theme="dark"] {
+    --primary-color: #3b82f6;
+    --primary-hover: #60a5fa;
+    --secondary-color: #94a3b8;
+    --background: #1e293b;
+    --surface: #0f172a;
+    --border: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --error: #f87171;
+    --success: #4ade80;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+}
+
+/* Smooth transitions for theme switching */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     line-height: 1.6;
@@ -60,6 +82,35 @@ header {
     text-align: center;
     margin-bottom: var(--spacing-xl);
     padding: var(--spacing-xl) 0;
+    position: relative;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--border);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.theme-toggle .icon {
+    font-size: 1.125rem;
 }
 
 h1 {
@@ -243,6 +294,11 @@ button {
     font-size: 0.875rem;
 }
 
+[data-theme="dark"] .error-message {
+    background: #7f1d1d;
+    border-color: #991b1b;
+}
+
 .error-message.show {
     display: block;
     animation: slideDown 0.3s ease;
@@ -381,6 +437,14 @@ footer {
     
     h1 {
         font-size: 2rem;
+    }
+    
+    .theme-toggle {
+        top: 0;
+        right: 0;
+        position: static;
+        margin: 0 auto var(--spacing-md);
+        width: fit-content;
     }
 }
 

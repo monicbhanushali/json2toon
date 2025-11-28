@@ -5,9 +5,16 @@
 class Converter {
     constructor() {
         this.inputFormat = 'json'; // Current input format
+        this.initializeTheme();
         this.initializeElements();
         this.attachEventListeners();
         this.loadExampleData();
+    }
+
+    initializeTheme() {
+        // Default to dark mode
+        this.currentTheme = 'dark';
+        document.documentElement.setAttribute('data-theme', this.currentTheme);
     }
 
     initializeElements() {
@@ -23,10 +30,16 @@ class Converter {
         this.copyInputBtn = document.getElementById('copyInputBtn');
         this.copyOutputBtn = document.getElementById('copyOutputBtn');
         this.downloadBtn = document.getElementById('downloadBtn');
+        this.themeToggle = document.getElementById('themeToggle');
+        this.themeIcon = document.getElementById('themeIcon');
+        this.themeText = document.getElementById('themeText');
         
         // Display elements
         this.outputFormat = document.getElementById('outputFormat');
         this.errorMessage = document.getElementById('errorMessage');
+        
+        // Update theme toggle UI
+        this.updateThemeToggle();
     }
 
     attachEventListeners() {
@@ -40,6 +53,7 @@ class Converter {
         this.copyInputBtn.addEventListener('click', () => this.copyToClipboard(this.inputArea.value));
         this.copyOutputBtn.addEventListener('click', () => this.copyToClipboard(this.outputArea.value));
         this.downloadBtn.addEventListener('click', () => this.downloadOutput());
+        this.themeToggle.addEventListener('click', () => this.toggleTheme());
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
@@ -50,6 +64,22 @@ class Converter {
                 }
             }
         });
+    }
+
+    toggleTheme() {
+        this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', this.currentTheme);
+        this.updateThemeToggle();
+    }
+
+    updateThemeToggle() {
+        if (this.currentTheme === 'dark') {
+            this.themeIcon.textContent = '☀️';
+            this.themeText.textContent = 'Light';
+        } else {
+            this.themeIcon.textContent = '🌙';
+            this.themeText.textContent = 'Dark';
+        }
     }
 
     setInputFormat(format) {
@@ -414,10 +444,30 @@ class Converter {
         }
 
         try {
-            await navigator.clipboard.writeText(text);
+            // Try modern Clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                // Fallback for non-secure contexts
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    textArea.remove();
+                } catch (err) {
+                    textArea.remove();
+                    throw err;
+                }
+            }
             
             // Show temporary success message
-            const originalError = this.errorMessage.textContent;
             this.errorMessage.textContent = '✓ Copied to clipboard!';
             this.errorMessage.style.background = '#f0fdf4';
             this.errorMessage.style.borderColor = '#bbf7d0';
@@ -431,7 +481,7 @@ class Converter {
                 this.errorMessage.style.color = '';
             }, 2000);
         } catch (err) {
-            this.showError('Failed to copy to clipboard.');
+            this.showError('Failed to copy to clipboard. Please copy manually.');
         }
     }
 
