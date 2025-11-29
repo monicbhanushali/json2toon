@@ -135,9 +135,14 @@ h1 {
    =========================== */
 .converter-section {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
+}
+
+/* When ads are enabled, use 3-column layout */
+body.ads-enabled .converter-section {
+    grid-template-columns: 1fr auto 1fr;
 }
 
 .input-panel,

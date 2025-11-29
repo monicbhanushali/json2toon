@@ -2,6 +2,11 @@
 // JSON ↔ TOON Converter App
 // ===========================
 
+// Feature Flags
+const FEATURE_FLAGS = {
+    enableAds: false  // Set to true to show AdSense ads
+};
+
 class Converter {
     constructor() {
         this.inputFormat = 'json'; // Current input format
@@ -9,12 +14,28 @@ class Converter {
         this.initializeElements();
         this.attachEventListeners();
         this.loadExampleData();
+        this.handleAdVisibility();
     }
 
     initializeTheme() {
         // Default to dark mode
         this.currentTheme = 'dark';
         document.documentElement.setAttribute('data-theme', this.currentTheme);
+    }
+
+    handleAdVisibility() {
+        // Hide or show ads based on feature flag
+        const adContainers = document.querySelectorAll('.ad-container');
+        adContainers.forEach(ad => {
+            ad.style.display = FEATURE_FLAGS.enableAds ? 'flex' : 'none';
+        });
+        
+        // Add class to body for layout adjustments
+        if (FEATURE_FLAGS.enableAds) {
+            document.body.classList.add('ads-enabled');
+        } else {
+            document.body.classList.remove('ads-enabled');
+        }
     }
 
     initializeElements() {
